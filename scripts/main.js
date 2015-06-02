@@ -1,35 +1,36 @@
-$(document).ready(function () {
+$(document).ready(function() {
 
-  $(".word").click(function () {
-    // Unhighlight previously selected word
-    $(".word").css({
-      "background-color": "transparent",
-      "border": "0",
-    });
-    // Hide previous popover
-    $(".word").not($(this)).popover('hide');
+  // Initialize popovers
+  $(".word").popover({
+    trigger: 'manual',
+    placement: 'bottom',
+    html: true,
+    title: 'Add a Comment',
+    content: '<form class="form-inline"><input type="text" class="form-control"><button type="submit" class="btn btn-primary">Add</button></form>'
+  });
 
-    if ($(this).attr('data-content')) {
-      // Highlight clicked word
-      $(this).css({
-        "background-color": "#ffff00",
-        "border": "2px solid #ffff00",
-        "border-radius": "8px"
-      });
-
-      // show comments on clicked word
-      $(this).popover('show');
+  // Highlight selected word
+  $(".word").on("click", function(e) {
+    e.stopPropagation();
+    if (!$(this).hasClass("highlight")) {
+      $(".highlight").popover("hide");
+      $(".highlight").removeClass("highlight");
+      $(this).popover("show");
+      $(this).addClass("highlight");
     }
   });
 
-  // Init popovers
-  $('[data-toggle="popover"]').popover({
-    placement: 'bottom',
-    html: true,
-    trigger: 'manual'
+  // Unhighlight selected word
+  $(window).on("click", function(e) {
+    if (!$(e.target).closest(".popover").length) {
+      $(".highlight").popover("hide");
+      $(".highlight").removeClass("highlight");
+    }
   });
 
-  $(".word").attr("data-content").css({
-    "border-bottom": "2px solid #ffff00"
+  // Underline words with comments
+  $(".word[data-content]").css({
+    'border-bottom': '4px solid #ffff00'
   });
+
 });
